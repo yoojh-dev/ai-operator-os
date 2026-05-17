@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# AI Operator OS
+node_modules/
+.next/
+
+storage/
+memory/
+tmp/
+
+*.db
+*.sqlite3
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
