@@ -1,0 +1,2 @@
+class FallbackExhausted(Exception):
+    pass
