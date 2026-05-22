@@ -1,54 +1,24 @@
-from typing import Generator
-
-from apps.api.providers.litellm_provider import (
-    call_llm,
-    stream_llm,
+from apps.api.providers.routing.provider_router import (
+    ProviderRouter,
 )
 
 
-class LiteLLMProvider:
-
-    def call(
-        self,
-        model: str,
-        messages: list,
-        tools=None,
-    ):
-        return call_llm(
-            model=model,
-            messages=messages,
-            tools=tools,
-        )
-
-    def stream(
-        self,
-        model: str,
-        messages: list,
-        tools=None,
-    ) -> Generator:
-
-        yield from stream_llm(
-            model=model,
-            messages=messages,
-            tools=tools,
-        )
-
-
-class ProviderRegistry:
-
+class ProviderManager:
     def __init__(self):
+        self.router = ProviderRouter()
 
-        self.default_provider = LiteLLMProvider()
+    async def chat(
+        self,
+        model: str,
+        messages: list,
+        stream: bool = False,
+    ):
+        adapter = self.router.route(
+            model,
+        )
 
-    def get_provider(self, model: str):
-
-        if model.startswith("gemini"):
-            return self.default_provider
-
-        if model.startswith("openai"):
-            return self.default_provider
-
-        if model.startswith("openrouter"):
-            return self.default_provider
-
-        return self.default_provider
+        return await adapter.chat(
+            model=model,
+            messages=messages,
+            stream=stream,
+        )
